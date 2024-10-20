@@ -1,14 +1,16 @@
+require('dotenv').config();
+
 const mysql = require('mysql2');
 
 let conexao;
 
 function handleDisconnect() {
     conexao = mysql.createConnection({
-        host: "atendimentos.mysql.uhserver.com",
-        port: 3306,
-        user: "liliana",
-        password: ".rW8k*mKKQMJBB8",
-        database: "atendimentos",
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
         keepAliveInitialDelay: 10000,
         enableKeepAlive: true
     });
@@ -24,7 +26,9 @@ function handleDisconnect() {
 
     conexao.on('error', err => {
         console.error(`[${new Date().toISOString()}] Erro na conexão MySQL:`, err);
-        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+
+        if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNRESET') {
+            console.log('Tentando reconectar após erro de perda de conexão...');
             handleDisconnect(); // Reconectar automaticamente em caso de perda de conexão
         } else {
             throw err; // Lida com outros tipos de erro
