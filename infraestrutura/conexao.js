@@ -1,6 +1,8 @@
 const mysql = require('mysql2');
 
 let conexao;
+let tentativasDeReconexao = 0;
+const maxTentativas = 10;
 
 function handleDisconnect() {
     conexao = mysql.createConnection({
@@ -15,15 +17,22 @@ function handleDisconnect() {
 
     conexao.connect(err => {
         if (err) {
-            console.log('Erro ao conectar ao MySQL:', err);
-            setTimeout(handleDisconnect, 2000); // Tenta reconectar após 2 segundos
+            console.error(`[${new Date().toISOString()}] Erro ao conectar ao MySQL:`, err);
+            tentativasDeReconexao++;
+            if (tentativasDeReconexao < maxTentativas) {
+                console.log(`Tentando reconectar... Tentativa ${tentativasDeReconexao} de ${maxTentativas}`);
+                setTimeout(handleDisconnect, 2000); // Tenta reconectar após 2 segundos
+            } else {
+                console.error('Máximo de tentativas de reconexão atingido. Abortando.');
+            }
         } else {
-            console.log('Conectado ao MySQL');
+            tentativasDeReconexao = 0;
+            console.log(`[${new Date().toISOString()}] Conectado ao MySQL`);
         }
     });
 
     conexao.on('error', err => {
-        console.log('Erro na conexão MySQL:', err);
+        console.error(`[${new Date().toISOString()}] Erro na conexão MySQL:`, err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
             handleDisconnect(); // Chama novamente a função para reconectar
         } else {
