@@ -1,11 +1,11 @@
 class Tabelas {
-    init(conexao){
+    async init(conexao) {
         this.conexao = conexao;
-        this.createTableAtendimento();
+        await this.createTableAtendimento(); // Use await para garantir que a tabela seja criada antes de continuar
     }
-    createTableAtendimento(){
-        const sql = 
-        `
+
+    async createTableAtendimento() {
+        const sql = `
             CREATE TABLE IF NOT EXISTS cliente_atendimento (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             DATA DATE, 
@@ -16,13 +16,12 @@ class Tabelas {
         );
         `;
 
-        this.conexao.query(sql, (error) => {
-            if(error){
-                console.log(`error ${error.message}`)
-                return;
-            }
-            console.log(200)
-        })
+        try {
+            await this.conexao.query(sql); // Usando await com a query
+            console.log(200); // Sucesso
+        } catch (error) {
+            console.log(`error ${error.message}`); // Captura erros
+        }
     }
 }
 
