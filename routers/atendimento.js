@@ -12,4 +12,7 @@ router.put("/atualizar/atendimento/:id", atendimentoController.atualizar)
 
 router.delete("/deletar/atendimento/:id", atendimentoController.deletar)
 
+// horarios disponiveis
+router.get("/horarios-disponiveis", atendimentoController.buscarHorariosDisponiveis)
+
 module.exports = router;

@@ -31,6 +31,13 @@ class AtendimentoController {
             )
             .catch((error) => res.status(400).json(error.message))
     }
+    buscarHorariosDisponiveis(req,res) {
+        const { data } = req.query;
+        const atendimento = atendimentoModel.listarHorariosDisponiveis(data)
+        return atendimento
+        .then(horarios => res.status(200).json(horarios))
+        .catch(error =>  res.status(400).json(error.message));
+    }
 }
 
 module.exports = new AtendimentoController();
