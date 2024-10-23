@@ -50,7 +50,7 @@ class AtendimentoModel {
         return this.executaQuery(sql, data)
         .then(resultados => {
             console.log("Horários ocupados da query:", resultados); // Verificando o resultado da query SQL
-            const horariosOcupados = resultados.map(res => res.horario_atendimento);
+            const horariosOcupados = resultados.map(res => res.horario_atendimento.substring(0, 5)); // 'HH:mm'
             console.log("Horários ocupados processados:", horariosOcupados); // Verificando os horários ocupados
             
             const horariosDeTrabalho = this.gerarHorariosDeTrabalho(data);
