@@ -1,5 +1,11 @@
 const express = require('express');
+const session = require('express-session')
+const bodyParser = require('body-parser')
+var path = require('path')
 const cors = require('cors');
+
+
+
 const app = express();
 const port = 3000;
 const appCustom = require('./config/appCustom');
@@ -12,6 +18,7 @@ const corsOptions = {
     credentials: true,  
     optionsSuccessStatus: 204 
 }
+
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 appCustom(app, express);

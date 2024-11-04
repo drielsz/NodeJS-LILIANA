@@ -30,6 +30,22 @@ class AtendimentoModel {
         return this.executaQuery(sql, id)
     }
 
+
+    buscarUserID(id) {
+        const sql = `SELECT id, name, email FROM users WHERE id = ?`
+        return this.executaQuery(sql, [id])
+    }
+    
+    verificarEmail(email) {
+        const sql = `SELECT * FROM users WHERE email = ?`
+        return this.executaQuery(sql, [email])
+    }
+
+    criarUser(novoUsuario) {
+        const sql = `INSERT INTO users SET ?`
+        return this.executaQuery(sql, novoUsuario)
+    }
+
     gerarHorariosDeTrabalho(data) {
         const diaSemana = new Date(data).getDay();
         console.log("Dia da semana:", diaSemana); // Verificar se o dia está correto
@@ -45,19 +61,15 @@ class AtendimentoModel {
     }
 
     listarHorariosDisponiveis(data) {
-        console.log(`data recebida: ${data}`)
+        
         const sql = `SELECT horario_atendimento from cliente_atendimento WHERE DATA = ?`;
         return this.executaQuery(sql, data)
         .then(resultados => {
-            console.log("Horários ocupados da query:", resultados); // Verificando o resultado da query SQL
             const horariosOcupados = resultados.map(res => res.horario_atendimento.substring(0, 5)); // 'HH:mm'
-            console.log("Horários ocupados processados:", horariosOcupados); // Verificando os horários ocupados
             
             const horariosDeTrabalho = this.gerarHorariosDeTrabalho(data);
-            console.log("Horários de trabalho:", horariosDeTrabalho); // Verificando os horários gerados para o dia
             
             const horariosDisponiveis = horariosDeTrabalho.filter(horario => !horariosOcupados.includes(horario));
-            console.log("Horários disponíveis:", horariosDisponiveis); // Verificando o resultado final
     
             return horariosDisponiveis;
         });
