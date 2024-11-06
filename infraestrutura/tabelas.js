@@ -44,6 +44,17 @@ class Tabelas {
             }
         });
     }
+
+
+    createTableCurtidas() {
+        const sql = ` 
+            CREATE TABLE IF NOT EXISTS curtidas (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                post_id INT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `
+    }
 }
 
 module.exports = new Tabelas();

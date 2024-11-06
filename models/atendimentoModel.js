@@ -74,6 +74,11 @@ class AtendimentoModel {
             return horariosDisponiveis;
         });
     }
+
+    criarCurtida(post_id) {
+        const sql = `INSERT INTO curtidas (post_id) VALUES (?)`
+        return this.executaQuery(sql, [post_id])
+    }
 }
 
 module.exports = new AtendimentoModel()
