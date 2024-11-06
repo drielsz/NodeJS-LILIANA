@@ -12,7 +12,7 @@ const appCustom = require('./config/appCustom');
 
 
 const corsOptions = {
-    origin: ['http://127.0.0.1:5500', 'https://nodejs-liliana-production.up.railway.app'],
+    origin: ['http://127.0.0.1:5500', 'https://nodejs-liliana-production.up.railway.app', 'https://www.adrielwebdesign.site'],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true,  
