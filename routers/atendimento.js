@@ -23,6 +23,18 @@ router.post('/curtir', (req, res) => {
             return res.status(500).send({ message: 'Erro ao salvar a curtida' })
         });
 });
+
+router.get('/curtidas', (req, res) => {
+    atendimentoModel.contarCurtidasPorPost()
+        .then(result => {
+            res.status(200).json(result); // Retorna um array com os `post_id` e suas respectivas contagens de curtidas
+        })
+        .catch(error => {
+            console.error('Erro ao obter contagem de curtidas:', error);
+            res.status(500).send({ message: 'Erro ao obter contagem de curtidas' });
+        });
+});
+
 // Private router 
 router.get("/user/:id", checkToken, async (req, res) => {
     const id = req.params.id;

@@ -79,6 +79,11 @@ class AtendimentoModel {
         const sql = `INSERT INTO curtidas (post_id) VALUES (?)`
         return this.executaQuery(sql, [post_id])
     }
+
+    contarCurtidasPorPost() {
+        const sql = `SELECT post_id, COUNT(*) AS totalCurtidas FROM curtidas GROUP BY post_id`    
+        return this.executaQuery(sql)
+    }
 }
 
 module.exports = new AtendimentoModel()
