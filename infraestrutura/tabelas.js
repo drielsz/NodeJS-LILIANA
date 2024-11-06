@@ -3,6 +3,7 @@ class Tabelas {
         this.conexao = conexao;
         this.createTableAtendimento();
         this.createTableUsers(); // Chama o método para criar a tabela de usuários
+        this.createTableCurtidas()
     }
 
     createTableAtendimento() {
@@ -54,6 +55,13 @@ class Tabelas {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `
+        this.conexao.query(sql, (error) => {
+            if (error) {
+                console.log(`Erro ao criar tabela users: ${error.message}`);
+            } else {
+                console.log("Tabela curtidas criada ou já existente");
+            }
+        });
     }
 }
 
