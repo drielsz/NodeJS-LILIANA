@@ -1,7 +1,4 @@
 const express = require('express');
-const session = require('express-session')
-const bodyParser = require('body-parser')
-var path = require('path')
 const cors = require('cors');
 
 
