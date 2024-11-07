@@ -48,7 +48,6 @@ class AtendimentoModel {
 
     gerarHorariosDeTrabalho(data) {
         const diaSemana = new Date(data).getDay();
-        console.log("Dia da semana:", diaSemana); // Verificar se o dia está correto
         let horarios = []
 
         if (diaSemana >= 2 && diaSemana <= 5) {
@@ -61,28 +60,39 @@ class AtendimentoModel {
     }
 
     listarHorariosDisponiveis(data) {
-
         const sql = `SELECT horario_atendimento from cliente_atendimento WHERE DATA = ?`;
         return this.executaQuery(sql, data)
             .then(resultados => {
                 const horariosOcupados = resultados.map(res => res.horario_atendimento.substring(0, 5)); // 'HH:mm'
-
+    
                 const horariosDeTrabalho = this.gerarHorariosDeTrabalho(data);
-
+    
                 const agora = new Date();
-                const horarioAtual = agora.getHours() * 60 + agora.getMinutes()
-                const horariosDisponiveis = horariosDeTrabalho.filter(horario => {
-                    const [hora, minutos] = horario.split(':').map(num => parseInt(num, 10))
-                    const horarioDisponivel = hora * 60 + minutos;
-
-
-                    return horarioDisponivel > horarioAtual && !horariosOcupados.includes(horario)
-
-                });
-
-                return horariosDisponiveis;
+                // Criar a data atual no formato 'YYYY-MM-DD'
+                const dataAtual = agora.toISOString().split('T')[0];
+                
+                // Se data for passada como string no formato 'YYYY-MM-DD', pode ser interpretada corretamente
+                const dataConsulta = new Date(data);
+                const dataConsultaFormatada = dataConsulta.toISOString().split('T')[0]; // Garante o formato 'YYYY-MM-DD'
+                
+                // Verificar se a data da consulta é a mesma que a data atual
+                if (dataAtual === dataConsultaFormatada) {
+                    console.log(dataAtual, "e", dataConsultaFormatada, "são iguais")
+                    // Se for o mesmo dia, filtra os horários passados
+                    const horarioAtual = agora.getHours() * 60 + agora.getMinutes();
+                    return horariosDeTrabalho.filter(horario => {
+                        const [hora, minutos] = horario.split(':').map(num => parseInt(num, 10));
+                        const horarioDisponivel = hora * 60 + minutos;
+    
+                        return horarioDisponivel > horarioAtual && !horariosOcupados.includes(horario);
+                    });
+                } else {
+                    // Se não for o mesmo dia, retorna todos os horários disponíveis sem filtrar os passados
+                    return horariosDeTrabalho.filter(horario => !horariosOcupados.includes(horario));
+                }
             });
     }
+    
 }
 
 module.exports = new AtendimentoModel()
