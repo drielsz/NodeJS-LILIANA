@@ -35,7 +35,7 @@ class AtendimentoModel {
         const sql = `SELECT id, name, email FROM users WHERE id = ?`
         return this.executaQuery(sql, [id])
     }
-    
+
     verificarEmail(email) {
         const sql = `SELECT * FROM users WHERE email = ?`
         return this.executaQuery(sql, [email])
@@ -61,18 +61,27 @@ class AtendimentoModel {
     }
 
     listarHorariosDisponiveis(data) {
-        
+
         const sql = `SELECT horario_atendimento from cliente_atendimento WHERE DATA = ?`;
         return this.executaQuery(sql, data)
-        .then(resultados => {
-            const horariosOcupados = resultados.map(res => res.horario_atendimento.substring(0, 5)); // 'HH:mm'
-            
-            const horariosDeTrabalho = this.gerarHorariosDeTrabalho(data);
-            
-            const horariosDisponiveis = horariosDeTrabalho.filter(horario => !horariosOcupados.includes(horario));
-    
-            return horariosDisponiveis;
-        });
+            .then(resultados => {
+                const horariosOcupados = resultados.map(res => res.horario_atendimento.substring(0, 5)); // 'HH:mm'
+
+                const horariosDeTrabalho = this.gerarHorariosDeTrabalho(data);
+
+                const agora = new Date();
+                const horarioAtual = agora.getHours() * 60 + agora.getMinutes()
+                const horariosDisponiveis = horariosDeTrabalho.filter(horario => {
+                    const [hora, minutos] = horario.split(':').map(num => parseInt(num, 10))
+                    const horarioDisponivel = hora * 60 + minutos;
+
+
+                    return horarioDisponivel > horarioAtual && !horariosOcupados.includes(horario)
+
+                });
+
+                return horariosDisponiveis;
+            });
     }
 }
 
