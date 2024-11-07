@@ -1,4 +1,6 @@
 const conexao = require("../infraestrutura/conexao")
+const { utcToZonedTime } = require('date-fns-tz');
+const { format } = require('date-fns');
 
 class AtendimentoModel {
     executaQuery(sql, parametros = "") {
@@ -59,27 +61,30 @@ class AtendimentoModel {
         return horarios;
     }
 
+
     listarHorariosDisponiveis(data) {
         const sql = `SELECT horario_atendimento from cliente_atendimento WHERE DATA = ?`;
         return this.executaQuery(sql, data)
             .then(resultados => {
                 const horariosOcupados = resultados.map(res => res.horario_atendimento.substring(0, 5)); // 'HH:mm'
-    
+                
                 const horariosDeTrabalho = this.gerarHorariosDeTrabalho(data);
     
+                // Criação da data atual ajustada para o fuso horário de São Paulo
                 const agora = new Date();
-                // Criar a data atual no formato 'YYYY-MM-DD'
-                const dataAtual = agora.toISOString().split('T')[0];
-                
-                // Se data for passada como string no formato 'YYYY-MM-DD', pode ser interpretada corretamente
+                const timezoneOffset = -3 * 60; // Offset para São Paulo (UTC-3)
+                const agoraLocal = new Date(agora.getTime() + timezoneOffset * 60 * 1000);
+                const dataAtual = `${agoraLocal.getFullYear()}-${String(agoraLocal.getMonth() + 1).padStart(2, '0')}-${String(agoraLocal.getDate()).padStart(2, '0')}`;
+    
+                // Converter a data de entrada para o mesmo formato
                 const dataConsulta = new Date(data);
-                const dataConsultaFormatada = dataConsulta.toISOString().split('T')[0]; // Garante o formato 'YYYY-MM-DD'
-                
+                const dataConsultaFormatada = `${dataConsulta.getFullYear()}-${String(dataConsulta.getDate() +1).padStart(2, '0')}-${String(dataConsulta.getMonth() + 1).padStart(2, '0')}`;
+    
+                console.log("Data Atual:", dataAtual, "Data Consulta Formatada:", dataConsultaFormatada);
+    
                 // Verificar se a data da consulta é a mesma que a data atual
                 if (dataAtual === dataConsultaFormatada) {
-                    console.log(dataAtual, "e", dataConsultaFormatada, "são iguais")
-                    // Se for o mesmo dia, filtra os horários passados
-                    const horarioAtual = agora.getHours() * 60 + agora.getMinutes();
+                    const horarioAtual = agoraLocal.getHours() * 60 + agoraLocal.getMinutes();
                     return horariosDeTrabalho.filter(horario => {
                         const [hora, minutos] = horario.split(':').map(num => parseInt(num, 10));
                         const horarioDisponivel = hora * 60 + minutos;
@@ -92,7 +97,7 @@ class AtendimentoModel {
                 }
             });
     }
-    
+
 }
 
 module.exports = new AtendimentoModel()
