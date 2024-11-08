@@ -69,8 +69,12 @@ class AtendimentoModel {
                 const horariosOcupados = resultados.map(res => res.horario_atendimento.substring(0, 5));
                 const horariosDeTrabalho = this.gerarHorariosDeTrabalho(data);
     
+                let agora = new Date();
+
+                if (process.env.NODE_ENV === 'production'){
+                    agora = new Date(new Date().getTime() - 3 * 60 * 60 * 1000); // Ajusta para UTC-3
+                }
                 // Ajuste para o fuso horário local (UTC-3)
-                const agora = new Date(new Date().getTime() - 3 * 60 * 60 * 1000); // Ajusta para UTC-3
                 const dataAtual = agora.toISOString().split('T')[0];
     
                 if (dataAtual === data) {
