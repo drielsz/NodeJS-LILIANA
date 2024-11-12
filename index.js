@@ -5,7 +5,8 @@ const {WebSocketServer} = require('ws')
 
 const app = express();
 const server = createServer(app)
-const wss = new WebSocketServer({ server })
+const wss = new WebSocketServer({ server, path: "/ws/atendimentos" })
+
 wss.on("connection", (ws) => {
     console.log("Cliente conectado!")
     ws.on("message", (message) =>{
@@ -23,7 +24,7 @@ const { create } = require('domain');
 
 
 const corsOptions = {
-    origin: ['http://127.0.0.1:5500', 'https://nodejs-liliana-production.up.railway.app', 'https://www.adrielwebdesign.site', 'wss://nodejs-liliana-production.up.railway.app', 'ws://nodejs-liliana-production.up.railway.app'],
+    origin: ['http://127.0.0.1:5500', 'https://nodejs-liliana-production.up.railway.app', 'https://www.adrielwebdesign.site', 'wss://nodejs-liliana-production.up.railway.app/ws/atendimentos'],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true,  
@@ -35,6 +36,6 @@ app.options('*', cors(corsOptions));
 appCustom(app, express);
 
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
