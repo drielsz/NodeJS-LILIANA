@@ -21,7 +21,6 @@ function handleDisconnect() {
             console.error(`[${new Date().toISOString()}] Erro ao conectar ao MySQL:`, err);
             setTimeout(handleDisconnect, 2000); // Continua tentando reconectar
         } else {
-            console.log(`[${new Date().toISOString()}] Conectado ao MySQL`);
             connection.release(); // Libera a conexão de volta ao pool
         }
     });

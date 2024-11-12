@@ -21,8 +21,6 @@ class Tabelas {
         this.conexao.query(sql, (error) => {
             if (error) {
                 console.log(`Erro ao criar tabela: ${error.message}`);
-            } else {
-                console.log("Tabela cliente_atendimento criada ou já existente");
             }
         });
     }
@@ -40,9 +38,7 @@ class Tabelas {
         this.conexao.query(sql, (error) => {
             if (error) {
                 console.log(`Erro ao criar tabela users: ${error.message}`);
-            } else {
-                console.log("Tabela users criada ou já existente");
-            }
+            } 
         });
     }
 
@@ -58,8 +54,6 @@ class Tabelas {
         this.conexao.query(sql, (error) => {
             if (error) {
                 console.log(`Erro ao criar tabela users: ${error.message}`);
-            } else {
-                console.log("Tabela curtidas criada ou já existente");
             }
         });
     }
