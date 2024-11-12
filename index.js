@@ -23,7 +23,7 @@ const { create } = require('domain');
 
 
 const corsOptions = {
-    origin: ['http://127.0.0.1:5500', 'https://nodejs-liliana-production.up.railway.app', 'https://www.adrielwebdesign.site'],
+    origin: ['http://127.0.0.1:5500', 'https://nodejs-liliana-production.up.railway.app', 'https://www.adrielwebdesign.site', 'wss://nodejs-liliana-production.up.railway.app', 'ws://nodejs-liliana-production.up.railway.app'],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true,  
