@@ -40,15 +40,16 @@ class AtendimentoController {
         
         return atendimento
         .then(horarios => res.status(200).json(horarios))
-        .then(xerekas => console.log(xerekas._header))
         .catch(error =>  res.status(400).json(error.message));
     }
+
     buscarWebSocket = async () => {
         try{
             const atendimentos = await atendimentoModel.listar();
-            return atendimentos.then(atendimentos => res.status(200).json(atendimentos));
+            return ws.send(JSON.stringify(atendimentos))
         }catch (err) {
             console.log(err)
+            ws.send(JSON.stringify({error: "Erro ao buscar atendimentos"}))
         }
     }
 }
