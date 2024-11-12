@@ -17,6 +17,7 @@ class AtendimentoModel {
         const sql = "SELECT * FROM cliente_atendimento";
         return this.executaQuery(sql)
     }
+
     criar(novoAtendimento) {
         const sql = "INSERT INTO cliente_atendimento SET ?"
         return this.executaQuery(sql, novoAtendimento)
